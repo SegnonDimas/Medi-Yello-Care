@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "966117097185",
+    "project_id": "medi-yello-care",
+    "storage_bucket": "medi-yello-care.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:966117097185:android:037cb34ff93908a08f01a0",
+        "android_client_info": {
+          "package_name": "com.codeurplus.medi_yellocare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "966117097185-22qhnrd0him4e92b47cl7a70k338p623.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDi4Z5v729xgEcYCy7k4fLHbTLBiX87Ytg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "966117097185-22qhnrd0him4e92b47cl7a70k338p623.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "966117097185-mpbbs5rgj79dbl7likjuc8lvlp8then3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.codeurplus.mediYellocare"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
