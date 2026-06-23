@@ -27,15 +27,17 @@ class AppTheme {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         color: AppColors.lightSurface,
       ),
-      appBarTheme: const AppBarTheme(
+      appBarTheme: AppBarTheme(
         centerTitle: true,
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.secondary,
+        foregroundColor: AppColors.primary,
         elevation: 0,
-        iconTheme: IconThemeData(color: AppColors.lightTextPrimary),
+        iconTheme: const IconThemeData(color: AppColors.lightTextPrimary),
         titleTextStyle: TextStyle(
           color: AppColors.lightTextPrimary,
           fontSize: 20,
           fontWeight: FontWeight.bold,
+          fontFamily: GoogleFonts.poppins().fontFamily,
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -47,6 +49,7 @@ class AppTheme {
           textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
       ),
+
     );
   }
 
@@ -75,15 +78,18 @@ class AppTheme {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         color: AppColors.darkSurface,
       ),
-      appBarTheme: const AppBarTheme(
+      appBarTheme:  AppBarTheme(
         centerTitle: true,
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.secondary,
+        foregroundColor: AppColors.primary,
         elevation: 0,
         iconTheme: IconThemeData(color: AppColors.darkTextPrimary),
         titleTextStyle: TextStyle(
           color: AppColors.darkTextPrimary,
           fontSize: 20,
           fontWeight: FontWeight.bold,
+
+          fontFamily: GoogleFonts.poppins().fontFamily,
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(

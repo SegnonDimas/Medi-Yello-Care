@@ -20,8 +20,8 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
     emit(FeedbackLoading());
     final result = await submitFeedbackUseCase(event.feedback);
     result.fold(
-      (failure) => emit(FeedbackError(failure.message)),
-      (_) => emit(FeedbackSubmitted()),
+      (failure) => emit(FeedbackFailure(failure.message)),
+      (_) => emit(FeedbackSuccess()),
     );
   }
 
@@ -29,7 +29,7 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
     emit(FeedbackLoading());
     final result = await repository.getUserFeedbacks(event.userId);
     result.fold(
-      (failure) => emit(FeedbackError(failure.message)),
+      (failure) => emit(FeedbackFailure(failure.message)),
       (feedbacks) => emit(UserFeedbacksLoaded(feedbacks)),
     );
   }

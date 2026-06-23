@@ -47,25 +47,21 @@ class _LoginPageState extends State<LoginPage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const SizedBox(height: 60),
-                  const Center(
-                    child: CircleAvatar(
-                      radius: 40,
-                      backgroundColor: AppColors.primary,
-                      child: Icon(Icons.medical_services, size: 40, color: Colors.black),
-                    ),
+                  Center(
+                    child: Image.asset("assets/icon/icon.png", height: 150,),
                   ),
-                  const SizedBox(height: 24),
+                  //const SizedBox(height: 24),
                   Text(
-                    'Medi Y\'ello Care',
+                    'MediGate',
                     textAlign: TextAlign.center,
                     style: theme.textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.primary,
+                      fontWeight: FontWeight.w900,
+                      color: AppColors.secondary,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Votre santé, notre priorité.',
+                    'La transparence, notre mission',
                     textAlign: TextAlign.center,
                     style: theme.textTheme.bodyMedium,
                   ),
@@ -73,12 +69,12 @@ class _LoginPageState extends State<LoginPage> {
                   TextFormField(
                     controller: _emailController,
                     decoration: const InputDecoration(
-                      labelText: 'Email',
-                      prefixIcon: Icon(Icons.email_outlined),
+                      labelText: 'NPI',
+                      prefixIcon: Icon(Icons.credit_card),
                       border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
                     ),
-                    keyboardType: TextInputType.emailAddress,
-                    validator: (value) => value?.isEmpty ?? true ? 'Veuillez entrer votre email' : null,
+                    keyboardType: TextInputType.phone,
+                    validator: (value) => value?.isEmpty ?? true ? 'Veuillez entrer votre NPI' : null,
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
@@ -95,7 +91,18 @@ class _LoginPageState extends State<LoginPage> {
                   BlocBuilder<AuthBloc, AuthState>(
                     builder: (context, state) {
                       if (state is AuthLoading) {
-                        return const Center(child: CircularProgressIndicator());
+                        return  Center(child:
+                        ElevatedButton(
+                            onPressed: () {
+                              if (_formKey.currentState?.validate() ?? false) {
+                                context.read<AuthBloc>().add(
+                                  AuthSignInRequested(
+                                    email: _emailController.text.trim(),
+                                    password: _passwordController.text.trim(),
+                                  ),
+                                );
+                              }
+                            },child: CircularProgressIndicator(color: Colors.white,)));
                       }
                       return ElevatedButton(
                         onPressed: () {
@@ -108,7 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                             );
                           }
                         },
-                        child: const Text('Se connecter'),
+                        child: const Text('Se connecter', style: TextStyle(color: Colors.white)),
                       );
                     },
                   ),

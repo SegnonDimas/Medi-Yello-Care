@@ -40,4 +40,14 @@ class PaymentRepositoryImpl implements PaymentRepository {
       return Left(ServerFailure(e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, TransactionEntity>> linkTransactionToUser(String transactionId, String userPhone) async {
+    try {
+      final result = await remoteDataSource.linkTransactionToUser(transactionId, userPhone);
+      return Right(result);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
 }

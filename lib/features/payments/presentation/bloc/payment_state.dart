@@ -28,6 +28,22 @@ class PatientTransactionsLoaded extends PaymentState {
   List<Object?> get props => [transactions];
 }
 
+class TransactionFetched extends PaymentState {
+  final TransactionEntity transaction;
+  const TransactionFetched(this.transaction);
+
+  @override
+  List<Object?> get props => [transaction];
+}
+
+class TransactionLinkedSuccess extends PaymentState {
+  final TransactionEntity transaction;
+  const TransactionLinkedSuccess(this.transaction);
+
+  @override
+  List<Object?> get props => [transaction];
+}
+
 class PaymentError extends PaymentState {
   final String message;
   const PaymentError(this.message);

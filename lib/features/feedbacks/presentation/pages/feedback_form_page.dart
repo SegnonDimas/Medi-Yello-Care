@@ -8,6 +8,7 @@ import '../bloc/feedback_state.dart';
 import '../../domain/entities/feedback_entity.dart';
 import '../../../../core/theme/app_colors.dart';
 import 'package:get_it/get_it.dart';
+import 'feedback_success_page.dart';
 
 class FeedbackFormPage extends StatefulWidget {
   final String? transactionId;
@@ -42,7 +43,7 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
     super.dispose();
   }
 
-  void _submit() {
+  void _submit(BuildContext context) {
     if (_formKey.currentState?.validate() ?? false) {
       final authState = context.read<AuthBloc>().state;
       if (authState is Authenticated) {
@@ -58,7 +59,7 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
           status: FeedbackStatus.received,
         );
         
-        GetIt.I<FeedbackBloc>().add(SubmitFeedbackRequested(feedback));
+        context.read<FeedbackBloc>().add(SubmitFeedbackRequested(feedback));
       }
     }
   }
@@ -69,76 +70,99 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
       value: GetIt.I<FeedbackBloc>(),
       child: Scaffold(
         appBar: AppBar(title: const Text('Donner un avis')),
-        body: BlocListener<FeedbackBloc, FeedbackState>(
+        body: BlocConsumer<FeedbackBloc, FeedbackState>(
           listener: (context, state) {
-            if (state is FeedbackSubmitted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Merci pour votre retour !'), backgroundColor: AppColors.success),
+            if (state is FeedbackSuccess) {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => const FeedbackSuccessPage()),
               );
-              Navigator.pop(context);
-            } else if (state is FeedbackError) {
+            } else if (state is FeedbackFailure) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.message), backgroundColor: AppColors.error),
               );
             }
           },
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  if (widget.transactionId != null) ...[
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
-                      child: Text('Cet avis est lié à votre transaction ${widget.transactionId}', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-                    ),
-                    const SizedBox(height: 24),
-                  ],
-                  const Text('De quoi s\'agit-il ?', style: TextStyle(fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 8),
-                  DropdownButtonFormField<FeedbackType>(
-                    value: _selectedType,
-                    items: const [
-                      DropdownMenuItem(value: FeedbackType.complaint, child: Text('Plainte')),
-                      DropdownMenuItem(value: FeedbackType.suggestion, child: Text('Suggestion')),
-                      DropdownMenuItem(value: FeedbackType.appreciation, child: Text('Remerciement')),
+          builder: (context, state) {
+            final isLoading = state is FeedbackLoading;
+            
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(24.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    if (widget.transactionId != null) ...[
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: AppColors.primary.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          'Cet avis est lié à votre transaction ${widget.transactionId}',
+                          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      const SizedBox(height: 24),
                     ],
-                    onChanged: (v) => setState(() => _selectedType = v!),
-                    decoration: const InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12)))),
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _hospitalController,
-                    decoration: const InputDecoration(labelText: 'Établissement', border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12)))),
-                    validator: (v) => v?.isEmpty ?? true ? 'Champ requis' : null,
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _serviceController,
-                    decoration: const InputDecoration(labelText: 'Service concerné', border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12)))),
-                    validator: (v) => v?.isEmpty ?? true ? 'Champ requis' : null,
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _descriptionController,
-                    maxLines: 5,
-                    decoration: const InputDecoration(labelText: 'Détails de votre message', alignLabelWithHint: true, border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12)))),
-                    validator: (v) => v?.isEmpty ?? true ? 'Veuillez décrire votre avis' : null,
-                  ),
-                  const SizedBox(height: 32),
-                  BlocBuilder<FeedbackBloc, FeedbackState>(
-                    builder: (context, state) {
-                      if (state is FeedbackLoading) return const Center(child: CircularProgressIndicator());
-                      return ElevatedButton(onPressed: _submit, child: const Text('Envoyer mon avis'));
-                    },
-                  ),
-                ],
+                    const Text('De quoi s\'agit-il ?', style: TextStyle(fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 8),
+                    DropdownButtonFormField<FeedbackType>(
+                      value: _selectedType,
+                      items: const [
+                        DropdownMenuItem(value: FeedbackType.complaint, child: Text('Plainte')),
+                        DropdownMenuItem(value: FeedbackType.suggestion, child: Text('Suggestion')),
+                        DropdownMenuItem(value: FeedbackType.appreciation, child: Text('Remerciement')),
+                      ],
+                      onChanged: isLoading ? null : (v) => setState(() => _selectedType = v!),
+                      decoration: const InputDecoration(border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12)))),
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _hospitalController,
+                      enabled: !isLoading,
+                      decoration: const InputDecoration(labelText: 'Établissement', border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12)))),
+                      validator: (v) => v?.isEmpty ?? true ? 'Champ requis' : null,
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _serviceController,
+                      enabled: !isLoading,
+                      decoration: const InputDecoration(labelText: 'Service concerné', border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12)))),
+                      validator: (v) => v?.isEmpty ?? true ? 'Champ requis' : null,
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _descriptionController,
+                      enabled: !isLoading,
+                      maxLines: 5,
+                      decoration: const InputDecoration(
+                        labelText: 'Détails de votre message',
+                        alignLabelWithHint: true,
+                        border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
+                      ),
+                      validator: (v) => v?.isEmpty ?? true ? 'Veuillez décrire votre avis' : null,
+                    ),
+                    const SizedBox(height: 32),
+                    ElevatedButton(
+                      onPressed: isLoading ? null : () => _submit(context),
+                      child: isLoading 
+                        ? const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.black)),
+                              SizedBox(width: 12),
+                              Text('Envoi en cours...'),
+                            ],
+                          )
+                        : const Text('Envoyer mon avis'),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ),
+            );
+          },
         ),
       ),
     );

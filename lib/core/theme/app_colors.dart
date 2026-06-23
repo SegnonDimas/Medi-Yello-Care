@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   // Primary colors
-  static const Color primary = Color(0xFFFFCC00); // MTN Yellow style
-  static const Color secondary = Color(0xFF004F9F); // MTN Blue style
+  static const Color primary = Color.fromARGB(255, 10, 34, 73); // MTN Yellow style
+  static const Color secondary = Color.fromARGB(255, 255, 204, 0); // MTN Blue style
   static const Color accent = Color(0xFFF44336);
 
   // Background colors

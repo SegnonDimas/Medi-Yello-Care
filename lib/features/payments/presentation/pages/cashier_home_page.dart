@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -78,7 +79,33 @@ class _CashierHomePageState extends State<CashierHomePage> {
               actions: [
                 IconButton(
                   icon: const Icon(Icons.logout),
-                  onPressed: () => context.read<AuthBloc>().add(AuthSignOutRequested()),
+                  onPressed: () {
+                    showCupertinoModalPopup(context: context, builder: (context){
+                      return CupertinoAlertDialog(
+                        title: Text("Deconnexion"),
+                        content: Text("Voulez-vous vraiment vous déconnecter ?"),
+                        actions: [
+
+                          CupertinoDialogAction(
+                            isDestructiveAction: true,
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text("Annuler", style: TextStyle(color: AppColors.lightTextSecondary,)),
+                          ),
+                          CupertinoDialogAction(
+                            isDefaultAction: true,
+                            onPressed: () {
+                              context.read<AuthBloc>().add(AuthSignOutRequested());
+                              Navigator.pop(context);
+                            },
+                            child: Text("Confirmer", style: TextStyle(color: AppColors.primary)),
+                          ),
+
+                        ],
+                      );
+                    });
+                  },
                 ),
               ],
             ),
@@ -134,7 +161,7 @@ class _CashierHomePageState extends State<CashierHomePage> {
                               backgroundColor: AppColors.primary,
                               padding: const EdgeInsets.symmetric(vertical: 16),
                             ),
-                            child: const Text('Valider Paiement MoMo'),
+                            child: const Text('Valider Paiement MoMo', style: TextStyle(color: Colors.white),),
                           );
                         },
                       ),

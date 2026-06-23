@@ -39,7 +39,7 @@ class FeedbackTab extends StatelessWidget {
                 itemCount: state.feedbacks.length,
                 itemBuilder: (context, index) => _buildFeedbackCard(context, state.feedbacks[index]),
               );
-            } else if (state is FeedbackError) {
+            } else if (state is FeedbackFailure) {
               return Center(child: Text(state.message));
             }
             return const Center(child: Text('Initialisant...'));
@@ -47,8 +47,8 @@ class FeedbackTab extends StatelessWidget {
         ),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () => _openFeedbackForm(context),
-          label:  Text('Nouvelle plainte / suggestion', style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
-          icon:  Icon(Icons.add_comment_outlined, color: Theme.of(context).colorScheme.onPrimary,),
+          label:  Text('Nouvelle plainte / suggestion', style: TextStyle(color: Colors.white)),
+          icon:  Icon(Icons.add_comment_outlined, color: Colors.white,),
           backgroundColor: AppColors.primary,
         ),
       ),

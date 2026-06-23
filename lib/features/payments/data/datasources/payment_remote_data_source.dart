@@ -5,6 +5,7 @@ abstract class PaymentRemoteDataSource {
   Future<TransactionModel> createTransaction(TransactionModel transaction);
   Future<List<TransactionModel>> getPatientTransactions(String phone);
   Future<TransactionModel> getTransactionById(String id);
+  Future<TransactionModel> linkTransactionToUser(String transactionId, String userPhone);
 }
 
 class PaymentRemoteDataSourceImpl implements PaymentRemoteDataSource {
@@ -16,7 +17,6 @@ class PaymentRemoteDataSourceImpl implements PaymentRemoteDataSource {
   Future<TransactionModel> createTransaction(TransactionModel transaction) async {
     final docRef = firestore.collection('transactions').doc();
     
-    // Simuler la génération du QR Code data (ici l'ID de la transaction suffit pour le hackathon)
     final transactionWithId = TransactionModel(
       id: docRef.id,
       patientName: transaction.patientName,
@@ -48,7 +48,20 @@ class PaymentRemoteDataSourceImpl implements PaymentRemoteDataSource {
   @override
   Future<TransactionModel> getTransactionById(String id) async {
     final doc = await firestore.collection('transactions').doc(id).get();
-    if (!doc.exists) throw Exception('Transaction not found');
+    if (!doc.exists) throw Exception('Transaction introuvable');
     return TransactionModel.fromMap(doc.data()!, doc.id);
+  }
+
+  @override
+  Future<TransactionModel> linkTransactionToUser(String transactionId, String userPhone) async {
+    final docRef = firestore.collection('transactions').doc(transactionId);
+    final doc = await docRef.get();
+    
+    if (!doc.exists) throw Exception('Transaction introuvable');
+    
+    await docRef.update({'patientPhone': userPhone});
+    
+    final updatedDoc = await docRef.get();
+    return TransactionModel.fromMap(updatedDoc.data()!, updatedDoc.id);
   }
 }

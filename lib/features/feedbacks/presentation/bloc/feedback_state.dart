@@ -12,7 +12,7 @@ class FeedbackInitial extends FeedbackState {}
 
 class FeedbackLoading extends FeedbackState {}
 
-class FeedbackSubmitted extends FeedbackState {}
+class FeedbackSuccess extends FeedbackState {}
 
 class UserFeedbacksLoaded extends FeedbackState {
   final List<FeedbackEntity> feedbacks;
@@ -22,9 +22,9 @@ class UserFeedbacksLoaded extends FeedbackState {
   List<Object?> get props => [feedbacks];
 }
 
-class FeedbackError extends FeedbackState {
+class FeedbackFailure extends FeedbackState {
   final String message;
-  const FeedbackError(this.message);
+  const FeedbackFailure(this.message);
 
   @override
   List<Object?> get props => [message];

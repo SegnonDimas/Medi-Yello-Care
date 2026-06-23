@@ -23,3 +23,20 @@ class LoadPatientTransactionsRequested extends PaymentEvent {
   @override
   List<Object?> get props => [phone];
 }
+
+class ScanQrCodeRequested extends PaymentEvent {
+  final String transactionId;
+  const ScanQrCodeRequested(this.transactionId);
+
+  @override
+  List<Object?> get props => [transactionId];
+}
+
+class LinkTransactionRequested extends PaymentEvent {
+  final String transactionId;
+  final String userPhone;
+  const LinkTransactionRequested({required this.transactionId, required this.userPhone});
+
+  @override
+  List<Object?> get props => [transactionId, userPhone];
+}

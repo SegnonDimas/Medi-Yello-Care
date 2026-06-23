@@ -1,6 +1,8 @@
+import 'package:chat_bubbles/bubbles/bubble_normal_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:medi_yellocare/features/payments/presentation/pages/qr_scanner_page.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_state.dart';
@@ -34,13 +36,25 @@ class CustomerTransactionsTab extends StatelessWidget {
             if (state.transactions.isEmpty) {
               return const Center(child: Text('Aucun paiement trouvé pour ce numéro.'));
             }
-            return ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: state.transactions.length,
-              itemBuilder: (context, index) {
-                final tx = state.transactions[index];
-                return _buildTransactionCard(context, tx);
-              },
+            return Scaffold(
+              body: ListView.builder(
+                padding: const EdgeInsets.all(16),
+                itemCount: state.transactions.length,
+                itemBuilder: (context, index) {
+                  final tx = state.transactions[index];
+                  return _buildTransactionCard(context, tx);
+                },
+              ),
+              floatingActionButton: FloatingActionButton.extended(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const QrScannerPage()),
+                  );
+                },
+                label: const Text('Scanner un QR', style: TextStyle(color: Colors.white)),
+                icon: const Icon(Icons.qr_code_scanner, color: Colors.white),
+                backgroundColor: AppColors.primary,
+              ),
             );
           } else if (state is PaymentError) {
             return Center(child: Text(state.message));
@@ -56,6 +70,7 @@ class CustomerTransactionsTab extends StatelessWidget {
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
+      shadowColor: AppColors.secondary,
       child: ListTile(
         title: Text(tx.serviceName, style: const TextStyle(fontWeight: FontWeight.bold)),
         subtitle: Column(
@@ -66,14 +81,14 @@ class CustomerTransactionsTab extends StatelessWidget {
             const SizedBox(height: 4),
             Row(
               children: [
-                const Icon(Icons.check_circle, color: AppColors.success, size: 16),
+                const Icon(Icons.check_circle, color: AppColors.secondary, size: 16),
                 const SizedBox(width: 4),
-                Text('Payé via MoMo (${tx.payerPhone})', style: const TextStyle(fontSize: 12, color: AppColors.success)),
+                Text('Payé via MoMo (${tx.payerPhone})', style: const TextStyle(fontSize: 12, color: AppColors.secondary, fontWeight: FontWeight.bold)),
               ],
             ),
           ],
         ),
-        trailing: const Icon(Icons.qr_code, color: AppColors.secondary),
+        trailing: const Icon(Icons.qr_code, color: AppColors.primary),
         onTap: () => _showTransactionDetails(context, tx),
       ),
     );
@@ -83,6 +98,7 @@ class CustomerTransactionsTab extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      scrollControlDisabledMaxHeightRatio: MediaQuery.of(context).size.height*0.8,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
       builder: (context) => DraggableScrollableSheet(
         initialChildSize: 0.7,
@@ -124,8 +140,8 @@ class CustomerTransactionsTab extends StatelessWidget {
                     ),
                   );
                 },
-                icon: const Icon(Icons.rate_review_outlined),
-                label: const Text('Donner mon avis'),
+                icon: const Icon(Icons.rate_review_outlined, color: Colors.white,),
+                label: const Text('Donner mon avis', style: TextStyle(color: Colors.white),),
               ),
             ],
           ),

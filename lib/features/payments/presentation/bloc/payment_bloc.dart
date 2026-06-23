@@ -14,6 +14,8 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
   }) : super(PaymentInitial()) {
     on<CreateTransactionRequested>(_onCreateTransactionRequested);
     on<LoadPatientTransactionsRequested>(_onLoadPatientTransactionsRequested);
+    on<ScanQrCodeRequested>(_onScanQrCodeRequested);
+    on<LinkTransactionRequested>(_onLinkTransactionRequested);
   }
 
   Future<void> _onCreateTransactionRequested(CreateTransactionRequested event, Emitter<PaymentState> emit) async {
@@ -31,6 +33,24 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     result.fold(
       (failure) => emit(PaymentError(failure.message)),
       (transactions) => emit(PatientTransactionsLoaded(transactions)),
+    );
+  }
+
+  Future<void> _onScanQrCodeRequested(ScanQrCodeRequested event, Emitter<PaymentState> emit) async {
+    emit(PaymentLoading());
+    final result = await repository.getTransactionById(event.transactionId);
+    result.fold(
+      (failure) => emit(PaymentError(failure.message)),
+      (transaction) => emit(TransactionFetched(transaction)),
+    );
+  }
+
+  Future<void> _onLinkTransactionRequested(LinkTransactionRequested event, Emitter<PaymentState> emit) async {
+    emit(PaymentLoading());
+    final result = await repository.linkTransactionToUser(event.transactionId, event.userPhone);
+    result.fold(
+      (failure) => emit(PaymentError(failure.message)),
+      (transaction) => emit(TransactionLinkedSuccess(transaction)),
     );
   }
 }
