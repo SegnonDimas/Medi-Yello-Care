@@ -60,7 +60,7 @@ class FeedbackTab extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.feedback_outlined, size: 64, color: Colors.grey[400]),
+          Icon(Icons.wechat, size: 64, color: Colors.grey[400]),
           const SizedBox(height: 16),
           const Text('Vous n\'avez pas encore envoyé d\'avis.', style: TextStyle(color: Colors.grey)),
         ],

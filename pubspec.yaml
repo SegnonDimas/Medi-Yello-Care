@@ -43,6 +43,7 @@ dependencies:
   dartz: ^0.10.1 # Functional programming (Either)
   flutter_launcher_icons: ^0.14.4
   chat_bubbles: ^1.6.0
+  flutter_tts: ^4.2.5
 
 dev_dependencies:
   flutter_test:

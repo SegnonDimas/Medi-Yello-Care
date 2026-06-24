@@ -153,10 +153,10 @@ class _FeedbackFormPageState extends State<FeedbackFormPage> {
                             children: [
                               SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.black)),
                               SizedBox(width: 12),
-                              Text('Envoi en cours...'),
+                              Text('Envoi en cours...', style: TextStyle(color: Colors.white),),
                             ],
                           )
-                        : const Text('Envoyer mon avis'),
+                        : const Text('Envoyer mon avis', style: TextStyle(color: Colors.white),),
                     ),
                   ],
                 ),

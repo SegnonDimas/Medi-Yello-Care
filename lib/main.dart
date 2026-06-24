@@ -8,12 +8,15 @@ import 'core/routes/app_router.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/bloc/auth_event.dart';
 
+import 'package:intl/date_symbol_data_local.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await di.init();
+  await initializeDateFormatting('fr_FR', null);
   runApp(const MyApp());
 }
 
@@ -25,7 +28,7 @@ class MyApp extends StatelessWidget {
     return BlocProvider(
       create: (context) => di.sl<AuthBloc>()..add(AuthCheckRequested()),
       child: MaterialApp.router(
-        title: 'Medi Yellocare',
+        title: 'MediGate',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,

@@ -76,8 +76,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   TextFormField(
                     controller: _emailController,
                     decoration: const InputDecoration(
-                      labelText: 'Email',
-                      prefixIcon: Icon(Icons.email_outlined),
+                      labelText: 'NPI',
+                      prefixIcon: Icon(Icons.card_membership),
                       border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
                     ),
                     keyboardType: TextInputType.emailAddress,
@@ -132,7 +132,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             final user = UserEntity(
                               uid: '', // Firestore set id
                               fullName: _fullNameController.text.trim(),
-                              email: _emailController.text.trim(),
+                              email: !(_emailController.text.contains("@"))?"${_emailController.text.trim()}@gmail.com" : _emailController.text.trim(),
                               phoneNumber: _phoneController.text.trim(),
                               role: _selectedRole,
                             );

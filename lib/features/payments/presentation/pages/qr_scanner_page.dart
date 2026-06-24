@@ -129,7 +129,7 @@ class _QrScannerPageState extends State<QrScannerPage> {
                       }
                     },
                     style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
-                    child: const Text('Confirmer'),
+                    child: const Text('Confirmer', style: TextStyle(color: Colors.white),),
                   ),
                 ),
               ],
